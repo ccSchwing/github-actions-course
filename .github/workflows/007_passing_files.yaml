@@ -37,7 +37,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage
-          path: ${{ github.workspace }}
+          path: ${{ github.workspace }}/backend/.coverage
 
       - name: List folder 
-        run: ls -la ${{ github.workspace }}
+        run: ls -la ${{ github.workspace }}/backend
