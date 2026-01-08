@@ -131,4 +131,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Docker push image to DockerHub
         run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ inputs.image-tag }}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_HUB_IMAGE}}:${{ inputs.image-tag }}
