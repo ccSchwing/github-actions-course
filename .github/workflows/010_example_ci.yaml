@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout source code 
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Install Python 3.10
         uses: actions/setup-python@v4
         with:
@@ -63,7 +63,7 @@ jobs:
           outputs: type=docker,dest=/tmp/image.tar
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           name: image
           path: /tmp/image.tar
@@ -73,7 +73,7 @@ jobs:
     needs: [build-image]
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: image
           path: /tmp
@@ -90,7 +90,7 @@ jobs:
     needs: [build-image]
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: image
           path: /tmp
@@ -106,7 +106,7 @@ jobs:
           output: 'trivy-results.json'
           severity: 'CRITICAL,HIGH'
       - name: Upload results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           name: trivy-results
           path: ${{ github.workspace }}/trivy-results.json
@@ -116,7 +116,7 @@ jobs:
     needs: [integration-tests, vulnerability-scan]
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: image
           path: /tmp
