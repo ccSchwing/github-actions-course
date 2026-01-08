@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       image-tag:
-        description: "Tag for image"
+        description: "CI/CD image"
         default: "latest"
         type: string
         required: true
+
+env:
+  DOCKER_HUB_IMAGE: 'myapp'  # Example of a workflow-level environment variable
 
 jobs:
   lint:
@@ -56,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: backend
-          tags: ${{ vars.DOCKER_HUB_IMAGE }}:${{ inputs.image-tag }} 
+          tags: ${ DOCKER_HUB_IMAGE }:${{ inputs.image-tag }} 
           outputs: type=docker,dest=/tmp/image.tar
 
       - name: Upload artifact
@@ -78,7 +81,7 @@ jobs:
         run: |
           docker load --input /tmp/image.tar
           docker image ls -a
-          docker run -p 8080:80 -d ${{ vars.DOCKER_HUB_IMAGE }}:${{ inputs.image-tag }} 
+          docker run -p 8080:80 -d ${ DOCKER_HUB_IMAGE }:${{ inputs.image-tag }} 
           sleep 5
           curl --fail 'http://localhost:8080/'
   
@@ -98,7 +101,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ vars.DOCKER_HUB_IMAGE }}:${{ inputs.image-tag }}
+          image-ref: ${.DOCKER_HUB_IMAGE }:${{ inputs.image-tag }}
           format: 'json'
           output: 'trivy-results.json'
           severity: 'CRITICAL,HIGH'
@@ -128,4 +131,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Docker push image to DockerHub
         run: |
-          docker push ${{ vars.DOCKER_HUB_IMAGE }}:${{ inputs.image-tag }}
+          docker push ${DOCKER_HUB_IMAGE }:${{ inputs.image-tag }}
